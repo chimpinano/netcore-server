@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ExampleServer.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace ExampleServer.Controllers
@@ -34,6 +35,12 @@ namespace ExampleServer.Controllers
 
         public IActionResult Error()
         {
+            return View();
+        }
+
+        public IActionResult DataSettings([FromServices] IDataConfiguration dataConfiguration)
+        {
+            ViewBag.Data = dataConfiguration.GetDataConnections();
             return View();
         }
     }

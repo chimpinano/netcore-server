@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using ExampleServer.Extensions;
+using ExampleServer.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,7 @@ namespace ExampleServer
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddAzureAppServiceDataConnections()
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -23,6 +26,8 @@ namespace ExampleServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IDataConfiguration>(new DataConfiguration(Configuration.GetSection("Data")));
+
             // Add framework services.
             services.AddMvc();
         }
