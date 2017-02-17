@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Hosting;
+using System;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 
 namespace ExampleServer
 {
@@ -11,13 +8,20 @@ namespace ExampleServer
     {
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
+            var hostBuilder = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
-                .UseApplicationInsights()
-                .Build();
+                .UseApplicationInsights();
+
+            var regionName = Environment.GetEnvironmentVariable("REGION_NAME");
+            if (regionName != null)
+            {
+                hostBuilder.UseAzureAppServices();
+            }
+                
+            var host = hostBuilder.Build();
 
             host.Run();
         }
