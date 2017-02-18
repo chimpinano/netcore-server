@@ -1,5 +1,5 @@
-﻿using ExampleServer.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace ExampleServer.Controllers
@@ -35,6 +35,12 @@ namespace ExampleServer.Controllers
 
         public IActionResult Error()
         {
+            return View();
+        }
+
+        public IActionResult Configuration([FromServices] IConfiguration service)
+        {
+            ViewBag.Configuration = service.AsEnumerable();
             return View();
         }
     }

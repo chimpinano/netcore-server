@@ -1,0 +1,19 @@
+﻿<h1>Configuration</h1>
+
+<div class="row">
+    <table class="table table-striped">
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+        <tbody>
+            @foreach (var item in ViewBag.Configuration)
+            {
+                <tr>
+                    <td>@item.Key</td>
+                    <td>@item.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
