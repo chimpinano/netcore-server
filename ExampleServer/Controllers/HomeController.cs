@@ -37,11 +37,5 @@ namespace ExampleServer.Controllers
         {
             return View();
         }
-
-        public IActionResult DataSettings([FromServices] IDataConfiguration dataConfiguration)
-        {
-            ViewBag.Data = dataConfiguration.GetDataConnections();
-            return View();
-        }
     }
 }

@@ -16,7 +16,6 @@ namespace ExampleServer
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddAzureAppServiceDataConnections()
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -26,8 +25,6 @@ namespace ExampleServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IDataConfiguration>(new DataConfiguration(Configuration.GetSection("Data")));
-
             // Add framework services.
             services.AddMvc();
         }
@@ -55,9 +52,7 @@ namespace ExampleServer
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
