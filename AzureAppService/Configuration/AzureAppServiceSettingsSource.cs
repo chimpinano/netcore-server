@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 
-namespace ExampleServer.Configuration
+namespace Microsoft.Azure.AppService.Core.Configuration
 {
     internal class AzureAppServiceSettingsSource : IConfigurationSource
     {

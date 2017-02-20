@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Azure.AppService.Core.Configuration;
 
-namespace ExampleServer.Configuration
+namespace Microsoft.Extensions.Configuration
 {
     public static class AzureAppServiceConfigurationBuilderExtensions
     {

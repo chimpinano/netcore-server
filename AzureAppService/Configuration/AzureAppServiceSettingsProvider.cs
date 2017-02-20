@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
-namespace ExampleServer.Configuration
+namespace Microsoft.Azure.AppService.Core.Configuration
 {
     internal class AzureAppServiceSettingsProvider : ConfigurationProvider
     {
