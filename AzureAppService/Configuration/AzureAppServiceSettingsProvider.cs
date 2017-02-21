@@ -10,14 +10,14 @@ namespace Microsoft.Azure.AppService.Core.Configuration
         private IDictionary env;
 
         /// <summary>
-        /// The regular expression used to match the key in the environment for Data Connections.
-        /// </summary>
-        private Regex DataConnectionsRegexp = new Regex(@"^([A-Z]+)CONNSTR_(.+)$");
-
-        /// <summary>
         /// Where all the app settings should go in the configuration
         /// </summary>
         private const string SettingsPrefix = "AzureAppService";
+
+        /// <summary>
+        /// The regular expression used to match the key in the environment for Data Connections.
+        /// </summary>
+        private Regex DataConnectionsRegexp = new Regex(@"^([A-Z]+)CONNSTR_(.+)$");
 
         /// <summary>
         /// Mapping from environment variable to position in configuration - explicit cases
@@ -27,15 +27,16 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             { "WEBSITE_AUTH_CLIENT_ID",                 $"{SettingsPrefix}:Auth:AzureActiveDirectory:ClientId" },
             { "WEBSITE_AUTH_CLIENT_SECRET",             $"{SettingsPrefix}:Auth:AzureActiveDirectory:ClientSecret" },
             { "WEBSITE_AUTH_OPENID_ISSUER",             $"{SettingsPrefix}:Auth:AzureActiveDirectory:Issuer" },
-            { "WEBSITE_AUTH_FACEBOOK_CLIENT_ID",        $"{SettingsPrefix}:Auth:Facebook:ClientId" },
-            { "WEBSITE_AUTH_FACEBOOK_CLIENT_SECRET",    $"{SettingsPrefix}:Auth:Facebook:ClientSecret" },
+            { "WEBSITE_AUTH_FB_APP_ID",                 $"{SettingsPrefix}:Auth:Facebook:ClientId" },
+            { "WEBSITE_AUTH_FB_APP_SECRET",             $"{SettingsPrefix}:Auth:Facebook:ClientSecret" },
             { "WEBSITE_AUTH_GOOGLE_CLIENT_ID",          $"{SettingsPrefix}:Auth:Google:ClientId" },
             { "WEBSITE_AUTH_GOOGLE_CLIENT_SECRET",      $"{SettingsPrefix}:Auth:Google:ClientSecret" },
             { "WEBSITE_AUTH_MSA_CLIENT_ID",             $"{SettingsPrefix}:Auth:MicrosoftAccount:ClientId" },
             { "WEBSITE_AUTH_MSA_CLIENT_SECRET",         $"{SettingsPrefix}:Auth:MicrosoftAccount:ClientSecret" },
-            { "WEBSITE_AUTH_TWITTER_CONSUMER_ID",       $"{SettingsPrefix}:Auth:Twitter:ClientId" },
+            { "WEBSITE_AUTH_TWITTER_CONSUMER_KEY",      $"{SettingsPrefix}:Auth:Twitter:ClientId" },
             { "WEBSITE_AUTH_TWITTER_CONSUMER_SECRET",   $"{SettingsPrefix}:Auth:Twitter:ClientSecret" },
-            { "WEBSITE_AUTH_SIGNING_KEY",               $"{SettingsPrefix}:Auth:SigningKey" }
+            { "WEBSITE_AUTH_SIGNING_KEY",               $"{SettingsPrefix}:Auth:SigningKey" },
+            { "MS_NotificationHubId",                   $"{SettingsPrefix}:Push:NotificationHubId" }
         };
 
         /// <summary>
@@ -53,10 +54,10 @@ namespace Microsoft.Azure.AppService.Core.Configuration
         /// </summary>
         private Dictionary<string, string> authProviderMapping = new Dictionary<string, string>
         {
-            { "WEBSITE_AUTH_FACEBOOK_",                 $"{SettingsPrefix}:Auth:Facebook" },
-            { "WEBSITE_AUTH_GOOGLE_",                   $"{SettingsPrefix}:Auth:Google" },
-            { "WEBSITE_AUTH_MSA_",                      $"{SettingsPrefix}:Auth:MicrosoftAccount" },
-            { "WEBSITE_AUTH_TWITTER_",                  $"{SettingsPrefix}:Auth:Twitter" }
+            { "WEBSITE_AUTH_FB_",          $"{SettingsPrefix}:Auth:Facebook" },
+            { "WEBSITE_AUTH_GOOGLE_",      $"{SettingsPrefix}:Auth:Google" },
+            { "WEBSITE_AUTH_MSA_",         $"{SettingsPrefix}:Auth:MicrosoftAccount" },
+            { "WEBSITE_AUTH_TWITTER_",     $"{SettingsPrefix}:Auth:Twitter" }
         };
 
         public AzureAppServiceSettingsProvider(IDictionary env)
@@ -79,9 +80,19 @@ namespace Microsoft.Azure.AppService.Core.Configuration
                 var m = DataConnectionsRegexp.Match(key);
                 if (m.Success)
                 {
-                    Data[$"Data:{m.Groups[2].Value}:Type"] = m.Groups[1].Value;
-                    Data[$"Data:{m.Groups[2].Value}:ConnectionString"] = value;
-                    Data[$"ConnectionStrings:{m.Groups[2].Value}"] = value;
+                    var type = m.Groups[1].Value;
+                    var name = m.Groups[2].Value;
+
+                    if (!key.Equals("CUSTOMCONNSTR_MS_NotificationHubConnectionString"))
+                    {
+                        Data[$"Data:{name}:Type"] = type;
+                        Data[$"Data:{name}:ConnectionString"] = value;
+                    }
+                    else
+                    {
+                        Data[$"{SettingsPrefix}:Push:ConnectionString"] = value;
+                    }
+                    Data[$"ConnectionStrings:{name}"] = value;
                     continue;
                 }
 
@@ -100,31 +111,21 @@ namespace Microsoft.Azure.AppService.Core.Configuration
                 }
 
                 // Scoped Cases for authentication providers
-                foreach (string start in authProviderMapping.Keys)
+                if (dictionaryMappingFound(key, value, authProviderMapping))
                 {
-                    if (key.StartsWith(start))
-                    {
-                        var setting = key.Substring(start.Length);
-                        Data[$"{authProviderMapping[start]}:{setting}"] = value;
-                        continue;
-                    }
+                    continue;
                 }
 
                 // Other scoped cases (not auth providers)
-                foreach (string start in scopedCases.Keys)
+                if (dictionaryMappingFound(key, value, scopedCases))
                 {
-                    if (key.StartsWith(start))
-                    {
-                        var setting = key.Substring(start.Length);
-                        Data[$"{scopedCases[start]}:{setting}"] = value;
-                        continue;
-                    }
+                    continue;
                 }
 
                 // Other internal settings
-                if (key.StartsWith("WEBSITE_"))
+                if (key.StartsWith("WEBSITE_") && !containsMappedKey(key, scopedCases))
                 {
-                    var setting = key.Substring(19);
+                    var setting = key.Substring(8);
                     Data[$"{SettingsPrefix}:Website:{setting}"] = value;
                     continue;
                 }
@@ -138,8 +139,50 @@ namespace Microsoft.Azure.AppService.Core.Configuration
                 }
 
                 // Add everything else into { "Environment" }
-                Data[$"Environment:{key}"] = value;
+                if (!key.StartsWith("APPSETTING_"))
+                {
+                    Data[$"Environment:{key}"] = value;
+                }
             }
+        }
+
+        /// <summary>
+        /// Determines if the key starts with any of the keys in the mapping
+        /// </summary>
+        /// <param name="key">The environment variable</param>
+        /// <param name="mapping">The mapping dictionary</param>
+        /// <returns></returns>
+        private bool containsMappedKey(string key, Dictionary<string, string> mapping)
+        {
+            foreach (var start in mapping.Keys)
+            {
+                if (key.StartsWith(start))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Handler for a mapping dictionary
+        /// </summary>
+        /// <param name="key">The environment variable to check</param>
+        /// <param name="value">The value of the environment variable</param>
+        /// <param name="mapping">The mapping dictionary</param>
+        /// <returns>true if a match was found</returns>
+        private bool dictionaryMappingFound(string key, string value, Dictionary<string, string> mapping)
+        {
+            foreach (string start in mapping.Keys)
+            {
+                if (key.StartsWith(start))
+                {
+                    var setting = key.Substring(start.Length);
+                    Data[$"{mapping[start]}:{setting}"] = value;
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
