@@ -5,9 +5,16 @@ namespace Microsoft.Azure.AppService.Core.Configuration
 {
     public class AzureAppServiceSettingsSource : IConfigurationSource
     {
+        private readonly bool includeEnvironment;
+
+        public AzureAppServiceSettingsSource(bool includeEnvironment = false)
+        {
+            this.includeEnvironment = includeEnvironment;
+        }
+
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
-            return new AzureAppServiceSettingsProvider(Environment.GetEnvironmentVariables());
+            return new AzureAppServiceSettingsProvider(Environment.GetEnvironmentVariables(), includeEnvironment);
         }
     }
 }

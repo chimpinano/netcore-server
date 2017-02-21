@@ -38,10 +38,11 @@ namespace Microsoft.Extensions.Configuration
         ///}
         /// </summary>
         /// <param name="builder">The <see cref="IConfigurationBuilder"/> with the current configuration</param>
+        /// <param name="includeEnvironment">True if you want the Environment section to be included</param>
         /// <returns>The new <see cref="IConfigurationBuilder"/> for chaining</returns>
-        public static IConfigurationBuilder AddAzureAppServiceSettings(this IConfigurationBuilder builder)
+        public static IConfigurationBuilder AddAzureAppServiceSettings(this IConfigurationBuilder builder, bool includeEnvironment = false)
         {
-            return builder.Add(new AzureAppServiceSettingsSource());
+            return builder.Add(new AzureAppServiceSettingsSource(includeEnvironment));
         }
     }
 }

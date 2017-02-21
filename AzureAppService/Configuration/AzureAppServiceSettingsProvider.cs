@@ -60,9 +60,20 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             { "WEBSITE_AUTH_TWITTER_",     $"{SettingsPrefix}:Auth:Twitter" }
         };
 
-        public AzureAppServiceSettingsProvider(IDictionary env)
+        /// <summary>
+        /// True if we want to include the Environment: configuration section
+        /// </summary>
+        private readonly bool includeEnvironment;
+
+        /// <summary>
+        /// Configure a new configuration provider
+        /// </summary>
+        /// <param name="env">The Azure App Service environment dictionary</param>
+        /// <param name="includeEnvironment">Set to true to enable the Environment: configuration section</param>
+        public AzureAppServiceSettingsProvider(IDictionary env, bool includeEnvironment = false)
         {
             this.env = env;
+            this.includeEnvironment = includeEnvironment;
         }
 
         /// <summary>
@@ -138,10 +149,13 @@ namespace Microsoft.Azure.AppService.Core.Configuration
                     continue;
                 }
 
-                // Add everything else into { "Environment" }
-                if (!key.StartsWith("APPSETTING_"))
+                // Add everything else into { "Environment" } if required
+                if (includeEnvironment)
                 {
-                    Data[$"Environment:{key}"] = value;
+                    if (!key.StartsWith("APPSETTING_"))
+                    {
+                        Data[$"Environment:{key}"] = value;
+                    }
                 }
             }
         }
