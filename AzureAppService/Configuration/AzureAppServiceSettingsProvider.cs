@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Azure.AppService.Core.Configuration
 {
-    internal class AzureAppServiceSettingsProvider : ConfigurationProvider
+    public class AzureAppServiceSettingsProvider : ConfigurationProvider
     {
         private IDictionary env;
 

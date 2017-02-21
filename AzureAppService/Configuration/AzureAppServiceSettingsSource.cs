@@ -3,7 +3,7 @@ using System;
 
 namespace Microsoft.Azure.AppService.Core.Configuration
 {
-    internal class AzureAppServiceSettingsSource : IConfigurationSource
+    public class AzureAppServiceSettingsSource : IConfigurationSource
     {
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
