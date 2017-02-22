@@ -44,18 +44,14 @@ namespace Microsoft.Azure.AppService.Core.Authentication
             // Convert the signing key we have to something we can use
             var signingKeys = new List<SecurityKey>();
             signingKeys.Add(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Options.SigningKey)));
-            // The signing key may also be base-64 encoded
-            try
-            {
-                byte[] b64key = Convert.FromBase64String(Options.SigningKey);
-                signingKeys.Add(new SymmetricSecurityKey(b64key));
-            } catch (Exception) { /* Ignore this error - it's the base-64 decoder */ }
 
             // validation parameters
+            var websiteAuthEnabled = Environment.GetEnvironmentVariable("WEBSITE_AUTH_ENABLED");
+            var inAzureAppService = (websiteAuthEnabled != null && websiteAuthEnabled.Equals("True", StringComparison.OrdinalIgnoreCase));
             var tokenValidationParameters = new TokenValidationParameters
             {
                 // The signature must have been created by the signing key
-                ValidateIssuerSigningKey = true,
+                ValidateIssuerSigningKey = !inAzureAppService,
                 IssuerSigningKeys = signingKeys,
 
                 // The Issuer (iss) claim must match
