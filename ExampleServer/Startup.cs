@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Azure.AppService.Core.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -26,6 +27,9 @@ namespace ExampleServer
             // Add Configuration as a service
             services.AddSingleton<IConfiguration>(Configuration);
 
+            // Add Authentication
+            services.AddAuthentication();
+
             // Add framework services.
             services.AddMvc();
         }
@@ -48,6 +52,13 @@ namespace ExampleServer
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseAzureAppServiceAuthentication(new AzureAppServiceAuthenticationOptions
+            {
+                SigningKey = Configuration["AzureAppService:Auth:SigningKey"],
+                AllowedAudiences = new[] { Configuration["AzureAppService:Auth:ALLOWED_AUDIENCES"] },
+                AllowedIssuers = new[] { $"https://{Configuration["AzureAppService:Website:HOST_NAME"]}" }
+            });
 
             app.UseStaticFiles();
 

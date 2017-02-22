@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -38,6 +39,7 @@ namespace ExampleServer.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult Configuration([FromServices] IConfiguration service)
         {
             ViewBag.Configuration = service.AsEnumerable();
