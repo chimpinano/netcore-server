@@ -56,8 +56,8 @@ namespace ExampleServer
             app.UseAzureAppServiceAuthentication(new AzureAppServiceAuthenticationOptions
             {
                 SigningKey = Configuration["AzureAppService:Auth:SigningKey"],
-                AllowedAudiences = new[] { Configuration["AzureAppService:Auth:ALLOWED_AUDIENCES"] },
-                AllowedIssuers = new[] { $"https://{Configuration["AzureAppService:Website:HOST_NAME"]}" }
+                AllowedAudiences = new[] { $"https://{Configuration["AzureAppService:Website:HOST_NAME"]}/" },
+                AllowedIssuers = new[] { $"https://{Configuration["AzureAppService:Website:HOST_NAME"]}/" }
             });
 
             app.UseStaticFiles();
