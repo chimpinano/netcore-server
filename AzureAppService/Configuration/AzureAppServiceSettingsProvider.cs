@@ -36,7 +36,8 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             { "WEBSITE_AUTH_TWITTER_CONSUMER_KEY",      $"{SettingsPrefix}:Auth:Twitter:ClientId" },
             { "WEBSITE_AUTH_TWITTER_CONSUMER_SECRET",   $"{SettingsPrefix}:Auth:Twitter:ClientSecret" },
             { "WEBSITE_AUTH_SIGNING_KEY",               $"{SettingsPrefix}:Auth:SigningKey" },
-            { "MS_NotificationHubId",                   $"{SettingsPrefix}:Push:NotificationHubId" }
+            { "MS_NotificationHubId",                   $"{SettingsPrefix}:Push:NotificationHubId" },
+            { "MS_NotificationHubName",                 $"{SettingsPrefix}:Push:NOtificationHubName" }
         };
 
         /// <summary>
