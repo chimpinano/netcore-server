@@ -21,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AzureAppService\AzureAppService.csproj" />
+    <ProjectReference Include="..\AzureMobileApps\AzureMobileApps.csproj" />
   </ItemGroup>
 
 </Project>

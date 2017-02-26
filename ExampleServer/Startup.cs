@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.AppService.Core.Authentication;
+using Microsoft.Azure.Mobile.Core.Server.Extensions;
+using Microsoft.Azure.Mobile.Core.Server.Managers;
+using Microsoft.Azure.Mobile.Core.Server.Tables;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,7 +30,7 @@ namespace ExampleServer
             // Add Configuration as a service
             services.AddSingleton<IConfiguration>(Configuration);
 
-            // Add Authentication
+            // Add Authentication Service
             services.AddAuthentication();
 
             // Add framework services.
@@ -43,10 +46,6 @@ namespace ExampleServer
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-
-                // Browser Link is not compatible with Kestrel 1.1.0
-                // For details on enabling Browser Link, see https://go.microsoft.com/fwlink/?linkid=840936
-                // app.UseBrowserLink();
             }
             else
             {
@@ -61,6 +60,11 @@ namespace ExampleServer
             });
 
             app.UseStaticFiles();
+
+            app.UseAzureMobileApps(tables =>
+            {
+                tables.AddTable("todoitem", new InMemoryDomainManager());
+            });
 
             app.UseMvc(routes =>
             {

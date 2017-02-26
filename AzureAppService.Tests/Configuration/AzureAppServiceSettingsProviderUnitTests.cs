@@ -26,14 +26,13 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             var provider = new AzureAppServiceSettingsProvider(env);
             provider.Load();
 
-            string r;
-            Assert.True(provider.TryGet("ConnectionStrings:MS_TableConnectionString", out r));
-            Assert.Equal("test1", r);
+            Assert.True(provider.TryGet("ConnectionStrings:MS_TableConnectionString", out string r1));
+            Assert.Equal("test1", r1);
 
-            Assert.True(provider.TryGet("ConnectionStrings:DefaultConnection", out r));
-            Assert.Equal("test2", r);
+            Assert.True(provider.TryGet("ConnectionStrings:DefaultConnection", out string r2));
+            Assert.Equal("test2", r2);
 
-            Assert.False(provider.TryGet("ConnectionStrings:MSTableConnectionString", out r));
+            Assert.False(provider.TryGet("ConnectionStrings:MSTableConnectionString", out string r3));
         }
 
         [Fact]
@@ -48,19 +47,18 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             var provider = new AzureAppServiceSettingsProvider(env);
             provider.Load();
 
-            string r;
-            Assert.True(provider.TryGet("Data:MS_TableConnectionString:Type", out r));
-            Assert.Equal("SQL", r);
-            Assert.True(provider.TryGet("Data:MS_TableConnectionString:ConnectionString", out r));
-            Assert.Equal("test1", r);
+            Assert.True(provider.TryGet("Data:MS_TableConnectionString:Type", out string r1));
+            Assert.Equal("SQL", r1);
+            Assert.True(provider.TryGet("Data:MS_TableConnectionString:ConnectionString", out string r2));
+            Assert.Equal("test1", r2);
 
-            Assert.True(provider.TryGet("Data:DefaultConnection:Type", out r));
-            Assert.Equal("SQLAZURE", r);
-            Assert.True(provider.TryGet("Data:DefaultConnection:ConnectionString", out r));
-            Assert.Equal("test2", r);
+            Assert.True(provider.TryGet("Data:DefaultConnection:Type", out string r3));
+            Assert.Equal("SQLAZURE", r3);
+            Assert.True(provider.TryGet("Data:DefaultConnection:ConnectionString", out string r4));
+            Assert.Equal("test2", r4);
 
-            Assert.False(provider.TryGet("Data:MSTableConnectionString:Type", out r));
-            Assert.False(provider.TryGet("Data:MSTableConnectionString:ConnectionString", out r));
+            Assert.False(provider.TryGet("Data:MSTableConnectionString:Type", out string r5));
+            Assert.False(provider.TryGet("Data:MSTableConnectionString:ConnectionString", out string r6));
         }
 
         [Fact]
@@ -73,11 +71,10 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             var provider = new AzureAppServiceSettingsProvider(env);
             provider.Load();
 
-            string r;
-            Assert.False(provider.TryGet("Data:MS_NotificationHubConnectionString:Type", out r));
-            Assert.False(provider.TryGet("Data:MS_NotificationHubConnectionString:ConnectionString", out r));
-            Assert.True(provider.TryGet("ConnectionStrings:MS_NotificationHubConnectionString", out r));
-            Assert.Equal("test1", r);
+            Assert.False(provider.TryGet("Data:MS_NotificationHubConnectionString:Type", out string r1));
+            Assert.False(provider.TryGet("Data:MS_NotificationHubConnectionString:ConnectionString", out string r2));
+            Assert.True(provider.TryGet("ConnectionStrings:MS_NotificationHubConnectionString", out string r3));
+            Assert.Equal("test1", r3);
         }
 
         [Fact]
@@ -92,13 +89,12 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             var provider = new AzureAppServiceSettingsProvider(env);
             provider.Load();
 
-            string r;
-            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:Mode", out r));
-            Assert.Equal("Express", r);
-            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:ClientId", out r));
-            Assert.Equal("test2", r);
-            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:Issuer", out r));
-            Assert.Equal("test3", r);
+            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:Mode", out string r1));
+            Assert.Equal("Express", r1);
+            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:ClientId", out string r2));
+            Assert.Equal("test2", r2);
+            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:Issuer", out string r3));
+            Assert.Equal("test3", r3);
         }
 
         [Fact]
@@ -114,15 +110,14 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             var provider = new AzureAppServiceSettingsProvider(env);
             provider.Load();
 
-            string r;
-            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:Mode", out r));
-            Assert.Equal("Advanced", r);
-            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:ClientId", out r));
-            Assert.Equal("test1", r);
-            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:ClientSecret", out r));
-            Assert.Equal("test2", r);
-            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:Issuer", out r));
-            Assert.Equal("test3", r);
+            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:Mode", out string r1));
+            Assert.Equal("Advanced", r1);
+            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:ClientId", out string r2));
+            Assert.Equal("test1", r2);
+            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:ClientSecret", out string r3));
+            Assert.Equal("test2", r3);
+            Assert.True(provider.TryGet("AzureAppService:Auth:AzureActiveDirectory:Issuer", out string r4));
+            Assert.Equal("test3", r4);
         }
 
         [Fact]
@@ -137,13 +132,12 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             var provider = new AzureAppServiceSettingsProvider(env);
             provider.Load();
 
-            string r;
-            Assert.True(provider.TryGet("AzureAppService:Auth:Facebook:ClientId", out r));
-            Assert.Equal("test1", r);
-            Assert.True(provider.TryGet("AzureAppService:Auth:Facebook:ClientSecret", out r));
-            Assert.Equal("test2", r);
-            Assert.True(provider.TryGet("AzureAppService:Auth:Facebook:SCOPE", out r));
-            Assert.Equal("test3", r);
+            Assert.True(provider.TryGet("AzureAppService:Auth:Facebook:ClientId", out string r1));
+            Assert.Equal("test1", r1);
+            Assert.True(provider.TryGet("AzureAppService:Auth:Facebook:ClientSecret", out string r2));
+            Assert.Equal("test2", r2);
+            Assert.True(provider.TryGet("AzureAppService:Auth:Facebook:SCOPE", out string r3));
+            Assert.Equal("test3", r3);
         }
 
         [Fact]
@@ -158,13 +152,12 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             var provider = new AzureAppServiceSettingsProvider(env);
             provider.Load();
 
-            string r;
-            Assert.True(provider.TryGet("AzureAppService:Auth:Google:ClientId", out r));
-            Assert.Equal("test1", r);
-            Assert.True(provider.TryGet("AzureAppService:Auth:Google:ClientSecret", out r));
-            Assert.Equal("test2", r);
-            Assert.True(provider.TryGet("AzureAppService:Auth:Google:SCOPE", out r));
-            Assert.Equal("test3", r);
+            Assert.True(provider.TryGet("AzureAppService:Auth:Google:ClientId", out string r1));
+            Assert.Equal("test1", r1);
+            Assert.True(provider.TryGet("AzureAppService:Auth:Google:ClientSecret", out string r2));
+            Assert.Equal("test2", r2);
+            Assert.True(provider.TryGet("AzureAppService:Auth:Google:SCOPE", out string r3));
+            Assert.Equal("test3", r3);
         }
 
         [Fact]
@@ -179,13 +172,12 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             var provider = new AzureAppServiceSettingsProvider(env);
             provider.Load();
 
-            string r;
-            Assert.True(provider.TryGet("AzureAppService:Auth:MicrosoftAccount:ClientId", out r));
-            Assert.Equal("test1", r);
-            Assert.True(provider.TryGet("AzureAppService:Auth:MicrosoftAccount:ClientSecret", out r));
-            Assert.Equal("test2", r);
-            Assert.True(provider.TryGet("AzureAppService:Auth:MicrosoftAccount:SCOPE", out r));
-            Assert.Equal("test3", r);
+            Assert.True(provider.TryGet("AzureAppService:Auth:MicrosoftAccount:ClientId", out string r1));
+            Assert.Equal("test1", r1);
+            Assert.True(provider.TryGet("AzureAppService:Auth:MicrosoftAccount:ClientSecret", out string r2));
+            Assert.Equal("test2", r2);
+            Assert.True(provider.TryGet("AzureAppService:Auth:MicrosoftAccount:SCOPE", out string r3));
+            Assert.Equal("test3", r3);
         }
 
         [Fact]
@@ -199,11 +191,10 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             var provider = new AzureAppServiceSettingsProvider(env);
             provider.Load();
 
-            string r;
-            Assert.True(provider.TryGet("AzureAppService:Auth:Twitter:ClientId", out r));
-            Assert.Equal("test1", r);
-            Assert.True(provider.TryGet("AzureAppService:Auth:Twitter:ClientSecret", out r));
-            Assert.Equal("test2", r);
+            Assert.True(provider.TryGet("AzureAppService:Auth:Twitter:ClientId", out string r1));
+            Assert.Equal("test1", r1);
+            Assert.True(provider.TryGet("AzureAppService:Auth:Twitter:ClientSecret", out string r2));
+            Assert.Equal("test2", r2);
         }
 
         [Fact]
@@ -217,11 +208,10 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             var provider = new AzureAppServiceSettingsProvider(env);
             provider.Load();
 
-            string r;
-            Assert.True(provider.TryGet("AzureAppService:Auth:SigningKey", out r));
-            Assert.Equal("test1", r);
-            Assert.True(provider.TryGet("AzureAppService:Auth:ALLOWED_AUDIENCES", out r));
-            Assert.Equal("test2", r);
+            Assert.True(provider.TryGet("AzureAppService:Auth:SigningKey", out string r1));
+            Assert.Equal("test1", r1);
+            Assert.True(provider.TryGet("AzureAppService:Auth:ALLOWED_AUDIENCES", out string r2));
+            Assert.Equal("test2", r2);
         }
 
         [Fact]
@@ -236,13 +226,12 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             var provider = new AzureAppServiceSettingsProvider(env);
             provider.Load();
 
-            string r;
-            Assert.True(provider.TryGet("AzureAppService:Push:ConnectionString", out r));
-            Assert.Equal("test1", r);
-            Assert.True(provider.TryGet("AzureAppService:Push:TAGS", out r));
-            Assert.Equal("test2", r);
-            Assert.True(provider.TryGet("AzureAppService:Push:ENABLED", out r));
-            Assert.Equal("True", r);
+            Assert.True(provider.TryGet("AzureAppService:Push:ConnectionString", out string r1));
+            Assert.Equal("test1", r1);
+            Assert.True(provider.TryGet("AzureAppService:Push:TAGS", out string r2));
+            Assert.Equal("test2", r2);
+            Assert.True(provider.TryGet("AzureAppService:Push:ENABLED", out string r3));
+            Assert.Equal("True", r3);
         }
 
         [Fact]
@@ -257,11 +246,10 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             var provider = new AzureAppServiceSettingsProvider(env);
             provider.Load();
 
-            string r;
-            Assert.True(provider.TryGet("AzureAppService:Website:HOST_NAME", out r));
-            Assert.Equal("test1", r);
-            Assert.False(provider.TryGet("AzureAppService:Website:PUSH_TAGS", out r));
-            Assert.False(provider.TryGet("AzureAppService:Website:AUTH_ENABLED", out r));
+            Assert.True(provider.TryGet("AzureAppService:Website:HOST_NAME", out string r1));
+            Assert.Equal("test1", r1);
+            Assert.False(provider.TryGet("AzureAppService:Website:PUSH_TAGS", out string r2));
+            Assert.False(provider.TryGet("AzureAppService:Website:AUTH_ENABLED", out string r3));
         }
 
         [Fact]
@@ -277,13 +265,12 @@ namespace Microsoft.Azure.AppService.Core.Configuration
             var provider = new AzureAppServiceSettingsProvider(env);
             provider.Load();
 
-            string r;
-            Assert.True(provider.TryGet("AzureAppService:AppSetting:FOO", out r));
-            Assert.Equal("test1", r);
-            Assert.False(provider.TryGet("AzureAppService:AppSetting:WEBSITE_PUSH_TAGS", out r));
-            Assert.False(provider.TryGet("AzureAppService:AppSetting:WEBSITE_AUTH_ENABLED", out r));
-            Assert.False(provider.TryGet("AzureAppService:AppSetting:PUSH_TAGS", out r));
-            Assert.False(provider.TryGet("AzureAppService:AppSetting:AUTH_ENABLED", out r));
+            Assert.True(provider.TryGet("AzureAppService:AppSetting:FOO", out string r1));
+            Assert.Equal("test1", r1);
+            Assert.False(provider.TryGet("AzureAppService:AppSetting:WEBSITE_PUSH_TAGS", out string r2));
+            Assert.False(provider.TryGet("AzureAppService:AppSetting:WEBSITE_AUTH_ENABLED", out string r3));
+            Assert.False(provider.TryGet("AzureAppService:AppSetting:PUSH_TAGS", out string r4));
+            Assert.False(provider.TryGet("AzureAppService:AppSetting:AUTH_ENABLED", out string r5));
         }
     }
 }
