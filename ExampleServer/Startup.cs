@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.AppService.Core.Authentication;
-using Microsoft.Azure.Mobile.Core.Server.Extensions;
-using Microsoft.Azure.Mobile.Core.Server.Managers;
-using Microsoft.Azure.Mobile.Core.Server.Tables;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -60,11 +57,6 @@ namespace ExampleServer
             });
 
             app.UseStaticFiles();
-
-            app.UseAzureMobileApps(tables =>
-            {
-                tables.AddTable("todoitem", new InMemoryDomainManager());
-            });
 
             app.UseMvc(routes =>
             {
